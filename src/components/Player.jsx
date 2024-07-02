@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Player = ({ initalName, symbol }) => {
+const Player = ({ initalName, symbol, isActive }) => {
   const [playerName, setPlayerName] = useState(initalName);
 
   const [isEditing, setIsEditing] = useState(false);
@@ -20,7 +20,7 @@ const Player = ({ initalName, symbol }) => {
     NameFeild = <input className="playerNameIp" type="text" required value={playerName} onChange={handleChange} />;
   }
   return (
-    <li>
+    <li className={isActive ? 'active' : '' }>
       <span id="player">
         {NameFeild}
         
