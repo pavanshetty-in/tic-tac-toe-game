@@ -5,6 +5,17 @@ import Log from "./components/Log.jsx";
 import {WINNING_COMBO} from "./winning-combo.js"
 import GameOver from "./components/GameOver.jsx";
 
+const PLAYER = {
+  X: 'Player 1',
+  O: 'Player 2',
+}
+
+const initalBoard =[
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
 const getCurrPlayer = (gameTurns) => {
 
   let localCurrPlayer = 'X';
@@ -14,24 +25,7 @@ const getCurrPlayer = (gameTurns) => {
 return localCurrPlayer;
 }
 
-
-const initalBoard =[
-  [null, null, null],
-  [null, null, null],
-  [null, null, null],
-];
-let winner = null;
-
-function App() {
-  const [players, setPlayers] = useState({
-    X: 'Player 1',
-    O: 'Player 2',
-  })
-  const [gameTurns, setGameTurns] = useState([]);
-
-  // const [currPlayer,setCurrPlayer] = useState('X');
-  const currPlayer = getCurrPlayer(gameTurns);
-  
+const getGameBoard = (gameTurns)  => {
   let gameBoard = [...initalBoard.map( (innerArray) => [...innerArray])];
 
   for(const turn of gameTurns){
@@ -41,6 +35,12 @@ function App() {
       gameBoard[row][col] = player;
   }
 
+  return gameBoard;
+
+}
+
+const getWinner = (gameBoard, players) => {
+  let winner = null;
   for (const Combo of WINNING_COMBO){
     const firstSquareSymbol = gameBoard[Combo[0].row][Combo[0].column]
     const secondSquareSymbol = gameBoard[Combo[1].row][Combo[1].column]
@@ -50,13 +50,26 @@ function App() {
       winner = players[firstSquareSymbol]
     }
   }
+  return winner;
+
+}
+
+function App() {
+  const [players, setPlayers] = useState(PLAYER)
+  const [gameTurns, setGameTurns] = useState([]);
+
+  // const [currPlayer,setCurrPlayer] = useState('X');
+  const currPlayer = getCurrPlayer(gameTurns);
+  
+  const  gameBoard = getGameBoard(gameTurns);
+  const winner = getWinner(gameBoard, players);
 
   let hasDraw = gameTurns.length === 9 && !winner;
 
   const handleRestart = () =>{
     setGameTurns([]);
-    hasDraw = null;
-    winner=null;
+    // hasDraw = null;
+    // winner=null;
   }
 
   const handleCurrPlayer =(rowIndex,colIndex) => {
@@ -90,9 +103,9 @@ function App() {
     <main>
       <div id="game-container">
         <ol id="players" className="highlight-player">
-          <Player initalName="player 1" symbol="X" isActive={currPlayer === 'X'}  onChangeName={handlePlayerSave}
+          <Player initalName={PLAYER.X} symbol="X" isActive={currPlayer === 'X'}  onChangeName={handlePlayerSave}
           />
-          <Player initalName="player 2" symbol="O" isActive={currPlayer === 'O'}  onChangeName={handlePlayerSave}/>
+          <Player initalName={PLAYER.O} symbol="O" isActive={currPlayer === 'O'}  onChangeName={handlePlayerSave}/>
           
         </ol>
         {(winner || hasDraw) && <GameOver winner={winner} onRestart={handleRestart}/>}
