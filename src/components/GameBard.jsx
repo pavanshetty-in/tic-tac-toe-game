@@ -1,21 +1,7 @@
 // import { useState } from "react";
 
-const initalBoard =[
-    [null, null, null],
-    [null, null, null],
-    [null, null, null],
-];
 
-const GameBoard = ({ onSelectSquare ,turns }) => {
-
-    let gameBoard = initalBoard;
-
-    for(const turn of turns){
-        const {square,player} = turn;
-        const {row, col} = square;
-
-        gameBoard[row][col] = player;
-    }
+const GameBoard = ({ onSelectSquare ,board }) => {
 
     //Lifting this state up to App Component to share the Data with Log Component
     // const [gameBoard, setGameBoard] = useState(initalBoard);
@@ -33,7 +19,7 @@ const GameBoard = ({ onSelectSquare ,turns }) => {
 
 return(
     <ol id='game-board'>
-       {gameBoard.map( (row, rowIndex) => (
+       {board.map( (row, rowIndex) => (
         <li key={rowIndex}>
             <ol>
                 {row.map( (playerSymbol, index) => (

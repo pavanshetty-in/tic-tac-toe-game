@@ -13,11 +13,27 @@ const getCurrPlayer = (gameTurns) => {
 return localCurrPlayer;
 }
 
+
+const initalBoard =[
+  [null, null, null],
+  [null, null, null],
+  [null, null, null],
+];
+
 function App() {
   const [gameTurns, setGameTurns] = useState([]);
 
   // const [currPlayer,setCurrPlayer] = useState('X');
   const currPlayer = getCurrPlayer(gameTurns);
+  
+  let gameBoard = initalBoard;
+
+  for(const turn of gameTurns){
+      const {square,player} = turn;
+      const {row, col} = square;
+
+      gameBoard[row][col] = player;
+  }
 
   const handleCurrPlayer =(rowIndex,colIndex) => {
     // setCurrPlayer( (prevVal) => (prevVal == 'X' ? 'O' : 'X') );
@@ -49,7 +65,7 @@ function App() {
         <GameBoard  onSelectSquare={handleCurrPlayer} 
         turns ={gameTurns} />
       </div>
-      <Log turns={gameTurns}/>
+      <Log board={gameBoard}/>
     </main>
   );
 }
