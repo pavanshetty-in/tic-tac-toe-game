@@ -3,6 +3,7 @@ import GameBoard from "./components/GameBard.jsx";
 import { useState } from "react";
 import Log from "./components/Log.jsx";
 import {WINNING_COMBO} from "./winning-combo.js"
+import GameOver from "./components/GameOver.jsx";
 
 const getCurrPlayer = (gameTurns) => {
 
@@ -27,7 +28,7 @@ function App() {
   // const [currPlayer,setCurrPlayer] = useState('X');
   const currPlayer = getCurrPlayer(gameTurns);
   
-  let gameBoard = initalBoard;
+  let gameBoard = [...initalBoard.map( (innerArray) => [...innerArray])];
 
   for(const turn of gameTurns){
       const {square,player} = turn;
@@ -44,6 +45,14 @@ function App() {
     if(firstSquareSymbol &&  firstSquareSymbol === secondSquareSymbol && firstSquareSymbol === thirdSquareSymbol){
       winner = firstSquareSymbol
     }
+  }
+
+  let hasDraw = gameTurns.length === 9 && !winner;
+
+  const handleRestart = () =>{
+    setGameTurns([]);
+    hasDraw = null;
+    winner=null;
   }
 
   const handleCurrPlayer =(rowIndex,colIndex) => {
@@ -73,7 +82,7 @@ function App() {
           <Player initalName="player 2" symbol="0" isActive={currPlayer === 'O'}/>
           
         </ol>
-        {winner && <p>you Won! {winner}</p>}
+        {(winner || hasDraw) && <GameOver winner={winner} onRestart={handleRestart}/>}
         <GameBoard  onSelectSquare={handleCurrPlayer} 
         board ={gameBoard} />
       </div>
